@@ -3,7 +3,7 @@ import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createDrawerNavigator} from 'react-navigation-drawer-no-warnings';
 
-import {HomeStackScreen, MainTabScreen} from "./src/pages/Main";
+import {MainTabScreen} from "./src/pages/Main";
 
 const Drawer = createDrawerNavigator();
 

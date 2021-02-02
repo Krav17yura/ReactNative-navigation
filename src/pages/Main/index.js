@@ -1,21 +1,14 @@
 import React from "react";
 
-import Icon from "react-native-vector-icons/Ionicons";
-import {createStackNavigator} from "@react-navigation/stack";
-
-import {ProfilePage} from "../Profile";
-import {HomePage} from "../Home";
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
-import {MapPage} from "../Map";
-import {AddPost} from "../AddPost";
 
-const HomeStack = createStackNavigator();
-const ProfileStack = createStackNavigator();
-const MapStack = createStackNavigator();
-const AddPostStack = createStackNavigator();
+import {ProfileStackScreen} from "../Profile";
+import {HomeStackScreen} from "../Home";
+import {MapStackScreen} from "../Map";
+import {AddPost, AddPostStackScreen} from "../AddPost";
+
 const Tab = createMaterialBottomTabNavigator();
-
 
 export const MainTabScreen =({navigation}) => (
     <Tab.Navigator
@@ -53,7 +46,6 @@ export const MainTabScreen =({navigation}) => (
                 ),
             }}
         />
-
         <Tab.Screen
             name="Profile"
             component={ProfileStackScreen}
@@ -69,116 +61,9 @@ export const MainTabScreen =({navigation}) => (
 
 
 
-export const HomeStackScreen = ({navigation}) => (
-    <HomeStack.Navigator screenOptions={{
-        headerStyle: {backgroundColor: '#009387'},
-        headerTintColor: "white",
-        headerTitleStyle: {
-            fontWeight: 'bold'
-        }
-    }}>
-        <HomeStack.Screen
-            name="Home"
-            component={HomePage}
-            options={{
-                headerRight: () => (
-                    <Icon.Button
-                        name='ios-menu'
-                        size={25}
-                        backgroundColor={'#009387'}
-                        onPress={() => navigation.openDrawer()}/>
 
-                )
-            }}
-        />
 
-      {/*  <HomeStack.Screen
-            name="Profile"
-            component={ProfilePage}
-            options={{
-                headerRight: () => (
-                    <Icon.Button
-                        name='ios-menu'
-                        size={25}
-                        backgroundColor={'#009387'}
-                        onPress={() => navigation.openDrawer()}/>
 
-                )
-            }}
-        />*/}
 
-    </HomeStack.Navigator>
-)
 
-const ProfileStackScreen = ({navigation}) => (
-    <ProfileStack.Navigator screenOptions={{
-        headerStyle: {backgroundColor: '#009387'},
-        headerTintColor: "white",
-        headerTitleStyle: {
-            fontWeight: 'bold'
-        }
-    }}>
-        <ProfileStack.Screen
-            name="Profile"
-            component={ProfilePage}
-            options={{
-                headerRight: () => (
-                    <Icon.Button
-                        name='ios-menu'
-                        size={25}
-                        backgroundColor={'#009387'}
-                        onPress={() => navigation.openDrawer()}/>
 
-                )
-            }}
-        />
-    </ProfileStack.Navigator>
-)
-
-const MapStackScreen = ({navigation}) => (
-    <MapStack.Navigator screenOptions={{
-        headerStyle: {backgroundColor: '#009387'},
-        headerTintColor: "white",
-        headerTitleStyle: {
-            fontWeight: 'bold'
-        }
-    }}>
-        <MapStack.Screen
-            name="Map"
-            component={MapPage}
-            options={{
-                headerRight: () => (
-                    <Icon.Button
-                        name='ios-menu'
-                        size={25}
-                        backgroundColor={'#009387'}
-                        onPress={() => navigation.openDrawer()}/>
-                )
-            }}
-        />
-    </MapStack.Navigator>
-)
-
-const AddPostStackScreen = ({navigation}) => (
-    <AddPostStack.Navigator screenOptions={{
-        headerStyle: {backgroundColor: '#009387'},
-        headerTintColor: "white",
-        headerTitleStyle: {
-            fontWeight: 'bold'
-        }
-    }}>
-        <AddPostStack.Screen
-            name="AddPost"
-            component={AddPost}
-            options={{
-                headerRight: () => (
-                    <Icon.Button
-                        name='ios-menu'
-                        size={25}
-                        backgroundColor={'#009387'}
-                        onPress={() => navigation.openDrawer()}/>
-                )
-            }}
-        />
-    </AddPostStack.Navigator>
-)
