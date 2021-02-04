@@ -2,22 +2,35 @@ import React from 'react';
 
 import {NavigationContainer} from '@react-navigation/native';
 import {createDrawerNavigator} from 'react-navigation-drawer-no-warnings';
+import {createStackNavigator} from '@react-navigation/stack';
 
 import {DrawerContent} from "./src/components/DrawerContent";
 import {MainTabScreen} from "./src/pages/Main";
-import {SupportPage} from "./src/pages/Support";
+import {SignInPage} from "./src/pages/SignIn";
+import {SignUpPage} from "./src/pages/SignUp";
 
 const Drawer = createDrawerNavigator();
 
+const singIn = false
+const Stack = createStackNavigator();
 
 export default function App() {
     return (
         <NavigationContainer>
-            <Drawer.Navigator  drawerContent={props => <DrawerContent {...props}/> }>
-                <Drawer.Screen name="HomeDrawer" component={MainTabScreen}/>
+            {singIn ? <>
+                <Drawer.Navigator drawerContent={props => <DrawerContent {...props}/>}>
+                    <Drawer.Screen name="HomeDrawer" component={MainTabScreen}/>
+                    {/*<Drawer.Screen name="HomeDrawer" component={SignInScreen}/>*/}
 
-                {/*<Drawer.Screen name="Profile" component={ProfileStackScreen}/>*/}
-            </Drawer.Navigator>
+                    {/*<Drawer.Screen name="Profile" component={ProfileStackScreen}/>*/}
+                </Drawer.Navigator>
+            </> : <>
+                <Stack.Navigator screenOptions={{headerStyle: {backgroundColor: '#009387',  elevation:0} }}>
+                    <Stack.Screen name="SignIn" options={{ title: '' }} component={SignInPage}/>
+                    <Stack.Screen name="SignUp" options={{ title: '' }} component={SignUpPage}/>
+                </Stack.Navigator>
+            </>
+            }
 
         </NavigationContainer>
     );

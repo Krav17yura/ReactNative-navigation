@@ -12,7 +12,7 @@ const Tab = createMaterialBottomTabNavigator();
 
 export const MainTabScreen = () => (
     <Tab.Navigator
-        initialRouteName="Feed"
+        initialRouteName="Home"
         activeColor="white"
         barStyle={{backgroundColor: '#009387'}}
     >
