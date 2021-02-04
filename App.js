@@ -10,9 +10,9 @@ import {SignInPage} from "./src/pages/SignIn";
 import {SignUpPage} from "./src/pages/SignUp";
 
 const Drawer = createDrawerNavigator();
+const Stack = createStackNavigator();
 
 const singIn = false
-const Stack = createStackNavigator();
 
 export default function App() {
     return (
@@ -20,9 +20,6 @@ export default function App() {
             {singIn ? <>
                 <Drawer.Navigator drawerContent={props => <DrawerContent {...props}/>}>
                     <Drawer.Screen name="HomeDrawer" component={MainTabScreen}/>
-                    {/*<Drawer.Screen name="HomeDrawer" component={SignInScreen}/>*/}
-
-                    {/*<Drawer.Screen name="Profile" component={ProfileStackScreen}/>*/}
                 </Drawer.Navigator>
             </> : <>
                 <Stack.Navigator screenOptions={{headerStyle: {backgroundColor: '#009387',  elevation:0} }}>
