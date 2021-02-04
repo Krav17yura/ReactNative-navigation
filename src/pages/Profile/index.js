@@ -1,33 +1,6 @@
 import React from 'react'
 import {Text, View, StyleSheet, Button} from "react-native";
-import Icon from "react-native-vector-icons/Ionicons";
-import {createStackNavigator} from "@react-navigation/stack";
 
-const ProfileStack = createStackNavigator();
-
-export const ProfileStackScreen = ({navigation}) => (
-    <ProfileStack.Navigator screenOptions={{
-        headerStyle: {backgroundColor: '#009387'},
-        headerTintColor: "white",
-        headerTitleStyle: {
-            fontWeight: 'bold'
-        }
-    }}>
-        <ProfileStack.Screen
-            name="Profile"
-            component={ProfilePage}
-            options={{
-                headerRight: () => (
-                    <Icon.Button
-                        name='ios-menu'
-                        size={25}
-                        backgroundColor={'#009387'}
-                        onPress={() => navigation.openDrawer()}/>
-                )
-            }}
-        />
-    </ProfileStack.Navigator>
-)
 
 export const ProfilePage = ({navigation}) => {
     return (

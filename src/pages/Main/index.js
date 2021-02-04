@@ -1,28 +1,28 @@
 import React from "react";
 
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
+import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
 
-import {ProfileStackScreen} from "../Profile";
-import {HomeStackScreen} from "../Home";
-import {MapStackScreen} from "../Map";
-import {AddPost, AddPostStackScreen} from "../AddPost";
+import {ProfileStackScreen} from "../Profile/screen";
+import {HomeStackScreen} from "../Home/screen";
+import {MapStackScreen} from "../Map/screen";
+import {AddPostStackScreen} from "../AddPost/screen";
 
 const Tab = createMaterialBottomTabNavigator();
 
-export const MainTabScreen =({navigation}) => (
+export const MainTabScreen = () => (
     <Tab.Navigator
         initialRouteName="Feed"
         activeColor="white"
-        barStyle={{ backgroundColor: '#009387' }}
+        barStyle={{backgroundColor: '#009387'}}
     >
         <Tab.Screen
             name="Home"
             component={HomeStackScreen}
             options={{
                 tabBarLabel: 'Home',
-                tabBarIcon: ({ color }) => (
-                    <MaterialCommunityIcons name="home" color={color} size={26} />
+                tabBarIcon: ({color}) => (
+                    <MaterialCommunityIcons name="home" color={color} size={26}/>
                 ),
             }}
         />
@@ -31,8 +31,8 @@ export const MainTabScreen =({navigation}) => (
             component={AddPostStackScreen}
             options={{
                 tabBarLabel: 'AddPost',
-                tabBarIcon: ({ color }) => (
-                    <MaterialCommunityIcons name="plus-box-multiple" color={color} size={26} />
+                tabBarIcon: ({color}) => (
+                    <MaterialCommunityIcons name="plus-box-multiple" color={color} size={26}/>
                 ),
             }}
         />
@@ -41,8 +41,8 @@ export const MainTabScreen =({navigation}) => (
             component={MapStackScreen}
             options={{
                 tabBarLabel: 'Map',
-                tabBarIcon: ({ color }) => (
-                    <MaterialCommunityIcons name="map" color={color} size={26} />
+                tabBarIcon: ({color}) => (
+                    <MaterialCommunityIcons name="map" color={color} size={26}/>
                 ),
             }}
         />
@@ -51,8 +51,8 @@ export const MainTabScreen =({navigation}) => (
             component={ProfileStackScreen}
             options={{
                 tabBarLabel: 'Profile',
-                tabBarIcon: ({ color }) => (
-                    <MaterialCommunityIcons name="account" color={color} size={26} />
+                tabBarIcon: ({color}) => (
+                    <MaterialCommunityIcons name="account" color={color} size={26}/>
                 ),
             }}
         />
