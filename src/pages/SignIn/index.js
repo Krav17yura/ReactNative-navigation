@@ -13,13 +13,12 @@ import { LinearGradient } from 'expo-linear-gradient';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
 
-import { REACT_APP_ENV } from "@env"
+// import { REACT_APP_ENV } from "@env"
 
 import {useTheme} from 'react-native-paper';
 
 
 export const SignInPage = ({navigation}) => {
-    console.log(REACT_APP_ENV)
     const [data, setData] = React.useState({
         username: '',
         password: '',

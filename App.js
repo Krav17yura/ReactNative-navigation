@@ -1,36 +1,19 @@
 import React from 'react';
+import {Main} from "./src/Main";
 
-import {NavigationContainer} from '@react-navigation/native';
-import {createDrawerNavigator} from 'react-navigation-drawer-no-warnings';
-import {createStackNavigator} from '@react-navigation/stack';
-
-import {DrawerContent} from "./src/components/DrawerContent";
-import {MainTabScreen} from "./src/pages/Main";
-import {SignInPage} from "./src/pages/SignIn";
-import {SignUpPage} from "./src/pages/SignUp";
-
-const Drawer = createDrawerNavigator();
-const Stack = createStackNavigator();
-
-const singIn = false
+import {Provider} from "react-redux";
+import store from "./src/redux/store";
+import {projectAuth} from "./src/firebase-config";
+import {authInfoSuccess} from "./src/redux/ducks/auth/actionCreators";
 
 export default function App() {
+    projectAuth.onAuthStateChanged(user => store.dispatch(authInfoSuccess(user)))
     return (
-        <NavigationContainer>
-            {singIn ? <>
-                <Drawer.Navigator drawerContent={props => <DrawerContent {...props}/>}>
-                    <Drawer.Screen name="HomeDrawer" component={MainTabScreen}/>
-                </Drawer.Navigator>
-            </> : <>
-                <Stack.Navigator screenOptions={{headerStyle: {backgroundColor: '#009387',  elevation:0} }}>
-                    <Stack.Screen name="SignIn" options={{ title: '' }} component={SignInPage}/>
-                    <Stack.Screen name="SignUp" options={{ title: '' }} component={SignUpPage}/>
-                </Stack.Navigator>
-            </>
-            }
-
-        </NavigationContainer>
+        <Provider store={store}>
+            <Main/>
+        </Provider>
     );
+
 }
 
 
