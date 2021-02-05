@@ -14,13 +14,11 @@ import {SignUpPage} from "./pages/SignUp";
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
 
-import {projectAuth} from "./firebase-config";
-import {authInfoSuccess} from "./redux/ducks/auth/actionCreators";
+
 import {useSelector} from "react-redux";
 
 export const Main = () => {
     const {isAuthenticated} = useSelector(state => state.reAuth)
-
 
     return (
         <NavigationContainer>
