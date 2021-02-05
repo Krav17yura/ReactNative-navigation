@@ -1,7 +1,7 @@
 import {SHOW_CURRENT_USER_REQUEST, SHOW_CURRENT_USER_SUCCESS} from "./actionTypes";
 import {transformUserData} from "../../../helpers";
 import {projectFirestore} from "../../../firebase-config";
-
+import {projectAuth} from "../../../firebase-config";
 
 export const showCurrentUserRequest = () => (
     {
@@ -16,7 +16,7 @@ export const showCurrentUserSuccess = user => ({
 
 
 
-export const fetchCurrentUser = () => async (dispatch, getState, firebase) => {
+export const fetchCurrentUser = () => async (dispatch, getState,) => {
     const {isAuthenticated} = getState().reAuth;
 
     if (!isAuthenticated) {
@@ -24,18 +24,18 @@ export const fetchCurrentUser = () => async (dispatch, getState, firebase) => {
         return Promise.resolve({});
     }
 
-    const currentUser = firebase.auth().currentUser;
+    const currentUser = projectAuth.currentUser;
 
-    let currentUserInFirestore = []
-    await projectFirestore.collection('users').where("id", '==', currentUser.uid).get()
-        .then(querySnapshot => {
-            querySnapshot.forEach(doc => (
-                currentUserInFirestore.push(doc.data())
-            ))
-        })
-        .catch(e => {
-            console.log("Error getting cached document:", e);
-        })
+    // let currentUserInFirestore = []
+    // await projectFirestore.collection('users').where("id", '==', currentUser.uid).get()
+    //     .then(querySnapshot => {
+    //         querySnapshot.forEach(doc => (
+    //             currentUserInFirestore.push(doc.data())
+    //         ))
+    //     })
+    //     .catch(e => {
+    //         console.log("Error getting cached document:", e);
+    //     })
 
-    await dispatch(showCurrentUserSuccess(transformUserData(currentUser, currentUserInFirestore)));
+    await dispatch(showCurrentUserSuccess(currentUser)/*(transformUserData(currentUser, currentUserInFirestore))*/);
 };

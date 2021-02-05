@@ -8,7 +8,7 @@ import {
 } from "./actionTypes";
 
 import {showCurrentUserSuccess} from "../currentUser/actionCreator";
-import {projectAuth, firebase} from "../../../firebase-config";
+import {projectAuth} from "../../../firebase-config";
 
 
 export const authInfoSuccess = user => {
