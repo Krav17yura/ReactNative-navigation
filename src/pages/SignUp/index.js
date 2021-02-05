@@ -2,22 +2,24 @@ import React from 'react'
 import {
     View,
     Text,
-    Button,
-    TouchableOpacity,
-    Dimensions,
-    TextInput,
-    Platform,
     StyleSheet,
-    ScrollView,
     StatusBar
 } from 'react-native';
-import * as Animatable from 'react-native-animatable';
-import {LinearGradient} from 'expo-linear-gradient';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import Feather from 'react-native-vector-icons/Feather';
+import {useDispatch, useSelector} from "react-redux";
+
 import {SignUpForm} from "../../components/forms/SignUpForm";
 
+import {signup} from "../../redux/ducks/auth/actionCreators";
+
 export const SignUpPage = ({navigation}) => {
+    const dispatch = useDispatch();
+    const {signupInProgress, signupError} = useSelector(state => state.reAuth);
+
+
+    const handleSubmit = values => {
+        const {email, password, nickName} = values
+        dispatch(signup({email, password,nickName, navigation}))
+    }
 
 
     return (
@@ -26,7 +28,12 @@ export const SignUpPage = ({navigation}) => {
             <View style={styles.header}>
                 <Text style={styles.text_header}>Register Now!</Text>
             </View>
-          <SignUpForm nav={navigation}/>
+            <SignUpForm
+                onSubmit={handleSubmit}
+                inProgress={signupInProgress}
+                onError={signupError}
+                nav={navigation}
+            />
         </View>
     );
 };

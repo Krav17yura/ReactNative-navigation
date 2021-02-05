@@ -31,19 +31,19 @@ const printErrorMessage = error => {
 };
 
 export const SignInForm = (props) => {
-    const {nav} = props
+    const {onSubmit, inProgress, onError, nav} = props
 
     const [secureTextEntry, setSecureTextEntry] = React.useState(true);
 
+    const errorMessage = onError ? printErrorMessage(onError) : null;
 
     const {colors} = useTheme();
-
 
     return (
         <Formik
             initialValues={{email: '', password: ''}}
             validationSchema={SignupSchema}
-            onSubmit={values => console.log(values)}
+            onSubmit={values => onSubmit(values)}
         >
             {({handleChange, handleBlur, handleSubmit, values, errors, touched}) => (
                 <Animatable.View
@@ -52,12 +52,18 @@ export const SignInForm = (props) => {
                         backgroundColor: colors.background
                     }]}
                 >
+                    {errorMessage ? (
+                        <Animatable.View animation="fadeInLeft" duration={500}>
+                            <Text style={styles.errorMsg}>{errorMessage}</Text>
+                        </Animatable.View>) : null
+                    }
+
                     <Text style={[styles.text_footer, {
                         color: colors.text
                     }]}>Email</Text>
                     <View style={styles.action}>
                         <FontAwesome
-                            name="user-o"
+                            name="envelope-o"
                             color={colors.text}
                             size={20}
                         />
@@ -134,7 +140,7 @@ export const SignInForm = (props) => {
                     {errors.password && touched.password ? (
                         <Animatable.View animation="fadeInLeft" duration={500}>
                             <Text style={styles.errorMsg}>{errors.password}</Text>
-                        </Animatable.View> ) : null
+                        </Animatable.View>) : null
                     }
 
                     <TouchableOpacity>
@@ -152,7 +158,7 @@ export const SignInForm = (props) => {
                             >
                                 <Text style={[styles.textSign, {
                                     color: '#fff'
-                                }]}>Sign In</Text>
+                                }]}>{inProgress ? "Loading..." : "Sign In"}</Text>
                             </LinearGradient>
                         </TouchableOpacity>
                         <TouchableOpacity

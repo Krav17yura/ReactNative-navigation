@@ -5,18 +5,34 @@ import {
     StyleSheet,
     StatusBar,
 } from 'react-native';
-import {SignInForm} from "../../components/forms/SignInForm";
 
+import {SignInForm} from "../../components/forms/SignInForm";
+import {login} from "../../redux/ducks/auth/actionCreators";
+
+import {useDispatch, useSelector} from "react-redux";
 
 
 export const SignInPage = ({navigation}) => {
+    const dispatch = useDispatch();
+    const {loginInProgress, loginError} = useSelector(state => state.reAuth);
+
+    const handleSubmit = values => {
+        const {email, password} = values
+        console.log(values)
+        dispatch(login({email, password, navigation}))
+    }
     return (
         <View style={styles.container}>
             <StatusBar backgroundColor='#009387' barStyle="light-content"/>
             <View style={styles.header}>
                 <Text style={styles.text_header}>Welcome!</Text>
             </View>
-              <SignInForm nav={navigation}/>
+            <SignInForm
+                onSubmit={handleSubmit}
+                inProgress={loginInProgress}
+                onError={loginError}
+                nav={navigation}
+            />
         </View>
     );
 };

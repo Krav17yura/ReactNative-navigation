@@ -18,21 +18,26 @@ const SignupSchema = Yup.object().shape({
         .min(8, 'Password must be 8 characters long.')
         .max(50, 'Too Long!')
         .required('Password is required'),
-    confirmPassword: Yup.string().oneOf([Yup.ref('password'), null], 'Passwords must match')
+    confirmPassword: Yup.string().oneOf([Yup.ref('password'), null], 'Passwords must match').required('Required'),
 });
 
 
-
 export const SignUpForm = (props) => {
-    const {nav} = props
+    const {onSubmit, inProgress, onError, nav} = props
 
     const [secureTextEntry, setSecureTextEntry] = React.useState(true);
+
+    const errorMessage = onError
+        ? onError.code === 'auth/email-already-in-use'
+            ? 'User already exist'
+            : 'Something went wrong. Try again'
+        : null;
 
     return (
         <Formik
             initialValues={{email: '', password: '', nickName: '', confirmPassword: ''}}
             validationSchema={SignupSchema}
-            onSubmit={values => console.log(values)}
+            onSubmit={values => onSubmit(values)}
         >
             {({handleChange, handleBlur, handleSubmit, values, errors, touched}) => (
                 <Animatable.View
@@ -40,6 +45,12 @@ export const SignUpForm = (props) => {
                     style={styles.footer}
                 >
                     <ScrollView>
+                        {errorMessage ? (
+                            <Animatable.View animation="fadeInLeft" duration={500}>
+                                <Text style={styles.errorMsg}>{errorMessage}</Text>
+                            </Animatable.View>) : null
+                        }
+
                         <Text style={styles.text_footer}>NickName</Text>
                         <View style={styles.action}>
                             <FontAwesome
@@ -79,7 +90,7 @@ export const SignUpForm = (props) => {
                         }]}>Email</Text>
                         <View style={styles.action}>
                             <FontAwesome
-                                name="user-o"
+                                name="envelope-o"
                                 color='#05375a'
                                 size={20}
                             />
@@ -212,7 +223,7 @@ export const SignUpForm = (props) => {
                                 >
                                     <Text style={[styles.textSign, {
                                         color: '#fff'
-                                    }]}>Sign Up</Text>
+                                    }]}>{inProgress ? "Loading..." : "Sign Up"}</Text>
                                 </LinearGradient>
                             </TouchableOpacity>
 

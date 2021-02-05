@@ -1,5 +1,4 @@
 import {
-    APP_LOGIN, APP_LOGOUT, APP_SIGNUP,
     AUTH_INFO_SUCCESS,
     LOGIN_ERROR,
     LOGIN_REQUEST,
@@ -8,9 +7,11 @@ import {
     SIGNUP_SUCCESS
 } from "./actionTypes";
 
+import {showCurrentUserSuccess} from "../currentUser/actionCreator";
+import {projectAuth, firebase} from "../../../firebase-config";
+
 
 export const authInfoSuccess = user => {
-    console.log(user)
     return {
         type: AUTH_INFO_SUCCESS,
         payload: user
@@ -61,21 +62,22 @@ export const logoutError = e => ({
 );
 
 
-export const login = (email, password) => (dispatch, getState, firebase) => {
+export const login = (params) => (dispatch) => {
+    const {email, password} = params
+    console.log('login')
     dispatch(loginRequest());
-    return firebase.auth().signInWithEmailAndPassword(email, password)
+    return projectAuth.signInWithEmailAndPassword(email, password)
         .then(() => dispatch(loginSuccess()))
         .catch(e => {
             dispatch(loginError(e));
-            throw e;
         });
 };
 
-export const signup = params => (dispatch, getState, firebase) => {
-    const {email, password, fullName, logoUrl} = params;
+export const signup = params => (dispatch) => {
+    const {email, password, nickName} = params;
     dispatch(signupRequest());
-    return firebase.auth().createUserWithEmailAndPassword(email, password)
-        .then(res => res.currentUser.updateProfile({displayName: fullName, photoURL: logoUrl}))
+    return projectAuth.createUserWithEmailAndPassword(email, password)
+        .then(res => res.currentUser.updateProfile({displayName: nickName}))
         .then(() => dispatch(signupSuccess()))
         .catch(e => {
             dispatch(signupError(e));
@@ -83,9 +85,10 @@ export const signup = params => (dispatch, getState, firebase) => {
         });
 };
 
-export const logout = () => (dispatch, getState, firebase) => {
+export const logout = () => (dispatch) => {
+    console.log("Hello")
     dispatch(logoutRequest());
-    return firebase.auth().signOut()
+    return projectAuth.signOut()
         .then(() => dispatch(logoutSuccess()))
         .then(() => dispatch(showCurrentUserSuccess(null)))
         .catch(e => {
