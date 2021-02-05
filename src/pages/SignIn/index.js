@@ -18,7 +18,6 @@ export const SignInPage = ({navigation}) => {
 
     const handleSubmit = values => {
         const {email, password} = values
-        console.log(values)
         dispatch(login({email, password, navigation}))
     }
     return (

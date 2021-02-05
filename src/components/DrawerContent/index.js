@@ -15,9 +15,10 @@ import {
     DrawerContentScrollView,
     DrawerItem
 } from '@react-navigation/drawer';
-
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+
 import {useDispatch} from "react-redux";
+
 import {logout} from "../../redux/ducks/auth/actionCreators";
 
 export const DrawerContent = (props) => {

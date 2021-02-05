@@ -25,6 +25,8 @@ const printErrorMessage = error => {
             return 'User does not exist';
         case 'auth/too-many-requests':
             return 'User blocked. Restore password or try again later';
+        case 'auth/user-not-found':
+            return 'User does not exist';
         default:
             return 'Something went wrong. Try again';
     }

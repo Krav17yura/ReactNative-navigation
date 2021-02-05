@@ -64,35 +64,49 @@ export const logoutError = e => ({
 
 export const login = (params) => (dispatch) => {
     const {email, password} = params
-    console.log('login')
     dispatch(loginRequest());
-    return projectAuth.signInWithEmailAndPassword(email, password)
-        .then(() => dispatch(loginSuccess()))
-        .catch(e => {
-            dispatch(loginError(e));
-        });
+
+    try {
+        projectAuth.signInWithEmailAndPassword(email, password)
+            .then(() => dispatch(loginSuccess()))
+            .catch(e => {
+                dispatch(loginError(e));
+            });
+    } catch (e) {
+        dispatch(loginError(e));
+    }
+
 };
 
 export const signup = params => (dispatch) => {
     const {email, password, nickName} = params;
     dispatch(signupRequest());
-    return projectAuth.createUserWithEmailAndPassword(email, password)
-        .then(res => res.currentUser.updateProfile({displayName: nickName}))
-        .then(() => dispatch(signupSuccess()))
-        .catch(e => {
-            dispatch(signupError(e));
-            throw e;
-        });
+
+    try {
+        projectAuth.createUserWithEmailAndPassword(email, password)
+            .then(res => res.user.updateProfile({displayName: nickName}))
+            .then(() => dispatch(signupSuccess()))
+            .catch(e => {
+                dispatch(signupError(e));
+            });
+    } catch (e) {
+        dispatch(signupError(e));
+    }
+
 };
 
 export const logout = () => (dispatch) => {
-    console.log("Hello")
     dispatch(logoutRequest());
-    return projectAuth.signOut()
-        .then(() => dispatch(logoutSuccess()))
-        .then(() => dispatch(showCurrentUserSuccess(null)))
-        .catch(e => {
-            dispatch(logoutError(e));
-            throw e;
-        });
+
+    try {
+        projectAuth.signOut()
+            .then(() => dispatch(logoutSuccess()))
+            .then(() => dispatch(showCurrentUserSuccess(null)))
+            .catch(e => {
+                dispatch(logoutError(e));
+            });
+    } catch (e) {
+        dispatch(logoutError(e));
+    }
+
 };

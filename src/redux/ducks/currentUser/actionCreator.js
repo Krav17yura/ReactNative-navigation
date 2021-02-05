@@ -10,7 +10,8 @@ export const showCurrentUserRequest = () => (
 );
 
 export const showCurrentUserSuccess = user => ({
-    type: SHOW_CURRENT_USER_SUCCESS, payload: user
+    type: SHOW_CURRENT_USER_SUCCESS,
+    payload: user
 });
 
 

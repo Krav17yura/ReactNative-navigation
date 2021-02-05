@@ -8,7 +8,8 @@ import {
 } from "./actionTypes";
 
 const reAuth = (state = {
-    isAuthenticated: false,
+    isAuthenticatedLoading: true,
+    isAuthenticated: true,
 
     loginInProgress: false,
     loginError: null,
@@ -24,7 +25,8 @@ const reAuth = (state = {
         case AUTH_INFO_SUCCESS:
             return {
                 ...state,
-                isAuthenticated: !!action.payload
+                isAuthenticated: !!action.payload,
+                isAuthenticatedLoading: false,
             };
 
         case LOGIN_REQUEST:
