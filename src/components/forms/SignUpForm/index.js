@@ -249,8 +249,8 @@ export const SignUpForm = (props) => {
 
 const styles = StyleSheet.create({
     footer: {
-        flex: Platform.OS === 'ios' ? 3 : 5,
-        backgroundColor: '#fff',
+        flex: /*Platform.OS === 'ios' ? 3 :*/ 5,
+        backgroundColor: '#ffffff',
         borderTopLeftRadius: 30,
         borderTopRightRadius: 30,
         paddingHorizontal: 20,
