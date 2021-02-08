@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, Button, StyleSheet, TouchableOpacity, TextInput, ScrollView, Platform} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity, TextInput, Platform} from 'react-native';
 import {Avatar} from "react-native-paper";
 import * as Animatable from "react-native-animatable";
 import {Formik} from "formik";
@@ -9,9 +9,9 @@ import * as Yup from "yup";
 import {LinearGradient} from "expo-linear-gradient";
 
 
-import BottomSheet from 'reanimated-bottom-sheet';
 import Animated from 'react-native-reanimated';
 import * as ImagePicker from 'expo-image-picker';
+import {BottomSheetAddImage} from "../../components/BottomSheetAddImage";
 
 const SettingSchema = Yup.object().shape({
     nickName: Yup.string()
@@ -27,8 +27,20 @@ const SettingSchema = Yup.object().shape({
 });
 
 export const SettingsPage = ({navigation}) => {
+    const [image, setImage] = useState('https://avatars.githubusercontent.com/u/36710059?s=460&u=2032a7eff0aabfcb796a018cf23c4b85a1131dd0&v=4');
+    const bs = React.createRef();
+    const fall = new Animated.Value(1);
 
-    const [image, setImage] = useState('https://api.adorable.io/avatars/80/abott@adorable.png');
+    useEffect(() => {
+        (async () => {
+            if (Platform.OS !== 'web') {
+                const {status} = await ImagePicker.requestMediaLibraryPermissionsAsync();
+                if (status !== 'granted') {
+                    alert('Sorry, we need camera roll permissions to make this work!');
+                }
+            }
+        })();
+    }, []);
 
 
     const takePhotoFromCamera = () => {
@@ -45,17 +57,6 @@ export const SettingsPage = ({navigation}) => {
         console.log("Camera")
     }
 
-    useEffect(() => {
-        (async () => {
-            if (Platform.OS !== 'web') {
-                const {status} = await ImagePicker.requestMediaLibraryPermissionsAsync();
-                if (status !== 'granted') {
-                    alert('Sorry, we need camera roll permissions to make this work!');
-                }
-            }
-        })();
-    }, []);
-
     const choosePhotoFromLibrary = () => {
         ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -69,60 +70,23 @@ export const SettingsPage = ({navigation}) => {
         }).catch(e => console.log(e))
     }
 
-    const renderInner = () => (
-        <View style={styles.panel}>
-            <View style={{alignItems: 'center'}}>
-                <Text style={styles.panelTitle}>Upload Photo</Text>
-                <Text style={styles.panelSubtitle}>Choose Your Profile Picture</Text>
-            </View>
-            <TouchableOpacity style={styles.panelButton} onPress={takePhotoFromCamera}>
-                <Text style={styles.panelButtonTitle}>Take Photo</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.panelButton} onPress={choosePhotoFromLibrary}>
-                <Text style={styles.panelButtonTitle}>Choose From Library</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-                style={styles.panelButton}
-                onPress={() => bs.current.snapTo(1)}>
-                <Text style={styles.panelButtonTitle}>Cancel</Text>
-            </TouchableOpacity>
-        </View>
-    );
-
-    const renderHeader = () => (
-        <View style={styles.header}>
-            <View style={styles.panelHeader}>
-                <View style={styles.panelHandle}/>
-            </View>
-        </View>
-    );
-
-    const bs = React.createRef();
-    const fall = new Animated.Value(1);
 
     return (
         <View style={styles.container}>
-            <BottomSheet
-                ref={bs}
-                snapPoints={[330, 0]}
-                renderContent={renderInner}
-                renderHeader={renderHeader}
-                initialSnap={1}
-                callbackNode={fall}
-                enabledGestureInteraction={true}
-                enabledContentTapInteraction={false}
-            />
+           <BottomSheetAddImage
+           bs={bs}
+           fall={fall}
+           choosePhotoFromLibrary={choosePhotoFromLibrary}
+           takePhotoFromCamera={takePhotoFromCamera}
+           />
             <Animated.View style={{
                 margin: 20,
                 opacity: Animated.add(0.1, Animated.multiply(fall, 1.0)),
             }}>
-                {/*<Animatable.View*/}
-                {/*    animation="fadeInUpBig"*/}
-                {/*>*/}
                 <View style={styles.settingsHeader}>
                     <Avatar.Image
                         source={{
-                            uri: 'https://avatars.githubusercontent.com/u/36710059?s=460&u=2032a7eff0aabfcb796a018cf23c4b85a1131dd0&v=4'
+                            uri: image
                         }}
                         size={70}
                     />
@@ -270,7 +234,6 @@ export const SettingsPage = ({navigation}) => {
                     </Formik>
                 </View>
             </Animated.View>
-            {/*</Animatable.View>*/}
         </View>
     );
 };
@@ -334,61 +297,5 @@ const styles = StyleSheet.create({
     },
     color_textPrivate: {
         color: 'grey'
-    },
-
-
-    panel: {
-        padding: 20,
-        backgroundColor: '#FFFFFF',
-        paddingTop: 20,
-        // borderTopLeftRadius: 20,
-        // borderTopRightRadius: 20,
-        // shadowColor: '#000000',
-        // shadowOffset: {width: 0, height: 0},
-        // shadowRadius: 5,
-        // shadowOpacity: 0.4,
-    },
-    header: {
-        backgroundColor: '#009387',
-        shadowColor: '#333333',
-        shadowOffset: {width: -1, height: -3},
-        shadowRadius: 2,
-        shadowOpacity: 0.4,
-        // elevation: 5,
-        paddingTop: 20,
-        borderTopLeftRadius: 20,
-        borderTopRightRadius: 20,
-    },
-    panelHeader: {
-        alignItems: 'center',
-    },
-    panelHandle: {
-        width: 40,
-        height: 8,
-        borderRadius: 4,
-        backgroundColor: '#00000040',
-        marginBottom: 10,
-    },
-    panelTitle: {
-        fontSize: 27,
-        height: 35,
-    },
-    panelSubtitle: {
-        fontSize: 14,
-        color: 'gray',
-        height: 30,
-        marginBottom: 10,
-    },
-    panelButton: {
-        padding: 13,
-        borderRadius: 10,
-        backgroundColor: '#009387',
-        alignItems: 'center',
-        marginVertical: 7,
-    },
-    panelButtonTitle: {
-        fontSize: 17,
-        fontWeight: 'bold',
-        color: 'white',
     },
 });
