@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {View, Text, Button, StyleSheet, TouchableOpacity, TextInput, ScrollView, Platform} from 'react-native';
 import {Avatar} from "react-native-paper";
 import * as Animatable from "react-native-animatable";
@@ -7,6 +7,10 @@ import FontAwesome from "react-native-vector-icons/FontAwesome";
 import Feather from "react-native-vector-icons/Feather";
 import * as Yup from "yup";
 import {LinearGradient} from "expo-linear-gradient";
+
+import ImagePicker from 'react-native-image-crop-picker';
+import BottomSheet from 'reanimated-bottom-sheet';
+import Animated from 'react-native-reanimated';
 
 const SettingSchema = Yup.object().shape({
     nickName: Yup.string()
@@ -22,11 +26,84 @@ const SettingSchema = Yup.object().shape({
 });
 
 export const SettingsPage = ({navigation}) => {
+
+    const [image, setImage] = useState('https://api.adorable.io/avatars/80/abott@adorable.png');
+
+
+    const takePhotoFromCamera = () => {
+        ImagePicker.openCamera({
+            compressImageMaxWidth: 300,
+            compressImageMaxHeight: 300,
+            cropping: true,
+            compressImageQuality: 0.7
+        }).then(image => {
+            console.log(image);
+            setImage(image.path);
+            bs.current.snapTo(1);
+        });
+    }
+
+    const choosePhotoFromLibrary = () => {
+        ImagePicker.openPicker({
+            width: 300,
+            height: 300,
+            cropping: true,
+            compressImageQuality: 0.7
+        }).then(image => {
+            console.log(image);
+            setImage(image.path);
+            bs.current.snapTo(1);
+        });
+    }
+
+  const renderInner = () => (
+        <View style={styles.panel}>
+            <View style={{alignItems: 'center'}}>
+                <Text style={styles.panelTitle}>Upload Photo</Text>
+                <Text style={styles.panelSubtitle}>Choose Your Profile Picture</Text>
+            </View>
+            <TouchableOpacity style={styles.panelButton} onPress={takePhotoFromCamera}>
+                <Text style={styles.panelButtonTitle}>Take Photo</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.panelButton} onPress={choosePhotoFromLibrary}>
+                <Text style={styles.panelButtonTitle}>Choose From Library</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+                style={styles.panelButton}
+                onPress={() => bs.current.snapTo(1)}>
+                <Text style={styles.panelButtonTitle}>Cancel</Text>
+            </TouchableOpacity>
+        </View>
+    );
+
+   const renderHeader = () => (
+        <View style={styles.header}>
+            <View style={styles.panelHeader}>
+                <View style={styles.panelHandle} />
+            </View>
+        </View>
+    );
+
+  const  bs = React.createRef();
+   const fall = new Animated.Value(1);
+
     return (
         <View style={styles.container}>
-            <Animatable.View
-                animation="fadeInUpBig"
-            >
+            <BottomSheet
+                ref={bs}
+                snapPoints={[330, 0]}
+                renderContent={renderInner}
+                renderHeader={renderHeader}
+                initialSnap={1}
+                callbackNode={fall}
+                enabledGestureInteraction={true}
+            />
+            <Animated.View style={{margin: 20,
+                opacity: Animated.add(0.1, Animated.multiply(fall, 1.0)),
+            }}>
+            {/*<Animatable.View*/}
+            {/*    animation="fadeInUpBig"*/}
+            {/*>*/}
             <View style={styles.settingsHeader}>
                 <Avatar.Image
                     source={{
@@ -177,7 +254,8 @@ export const SettingsPage = ({navigation}) => {
                     )}
                 </Formik>
             </View>
-            </Animatable.View>
+            </Animated.View>
+            {/*</Animatable.View>*/}
         </View>
     );
 };
