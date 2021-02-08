@@ -1,10 +1,13 @@
-import React from 'react'
-import {View, Text, StyleSheet, Button, TextInput, Platform} from 'react-native'
+import React, {useEffect, useState} from 'react'
+import {View, Text, StyleSheet, Image, Button, ScrollView, TextInput, Platform, TouchableOpacity} from 'react-native'
 import {Formik} from "formik";
 import * as Yup from "yup";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import * as Animatable from "react-native-animatable";
 import Feather from "react-native-vector-icons/Feather";
+import Animated from "react-native-reanimated";
+import * as ImagePicker from "expo-image-picker";
+import {BottomSheetAddImage} from "../../components/BottomSheetAddImage";
 
 const SettingSchema = Yup.object().shape({
     description: Yup.string()
@@ -13,53 +16,92 @@ const SettingSchema = Yup.object().shape({
 });
 
 export const AddPostPage = ({navigation}) => {
+    const [image, setImage] = useState('');
+
+    const bs = React.createRef();
+    const fall = new Animated.Value(1);
+
+    const handleChangeImage = (value) => {
+        setImage(value)
+    }
+
     return (
-        <View style={styles.container}>
-            <View style={styles.addPostForm}>
-                <Formik
-                    initialValues={{description: ''}}
-                    onSubmit={() => console.log('submit')}
-                    validationSchema={SettingSchema}
-                >
-                    {({handleChange, handleBlur, handleSubmit, values, errors, touched}) => (
-                        <View>
-                            <Text style={styles.text_footer}>Description</Text>
-                            <View style={styles.action}>
-                                <FontAwesome
-                                    name="user-o"
-                                    color="#05375a"
-                                    size={20}
-                                />
-                                <TextInput
-                                    placeholder="Description"
-                                    style={styles.textInput}
-                                    autoCapitalize="none"
-                                    onChangeText={handleChange('description')}
-                                    onBlur={handleBlur('description')}
-                                    value={values.description}
-                                />
-                                {(values.description.trim().length >= 6 && !errors.description) ?
-                                    <Animatable.View
-                                        animation="bounceIn"
-                                    >
-                                        <Feather
-                                            name="check-circle"
-                                            color="green"
+            <View style={styles.container}>
+                <BottomSheetAddImage
+                    bs={bs}
+                    fall={fall}
+                    handleChangeImage={handleChangeImage}
+                />
+                <ScrollView>
+                <Animated.View style={{
+                    opacity: Animated.add(0.1, Animated.multiply(fall, 1.0)),
+                }}>
+                    <View style={styles.addPostForm}>
+                        <Formik
+                            initialValues={{description: ''}}
+                            onSubmit={() => console.log('submit')}
+                            validationSchema={SettingSchema}
+                        >
+                            {({handleChange, handleBlur, handleSubmit, values, errors, touched}) => (
+                                <View>
+                                    <Text style={styles.text_footer}>Photo</Text>
+
+                                    <TouchableOpacity onPress={() => bs.current.snapTo(0)}>
+                                        <Text style={{
+                                            color: '#009387',
+                                            fontSize: 18
+                                        }}>{image ? 'Replace photo' : 'Upload photo'}</Text>
+                                    </TouchableOpacity>
+
+                                    {image ?
+                                        <Image source={{
+                                            uri: image
+                                        }}
+                                               resizeMode="cover"
+                                               style={{width: '100%', height: 400,}}
+                                        /> : null}
+
+
+                                    <Text style={styles.text_footer}>Description</Text>
+                                    <View style={styles.action}>
+                                        <FontAwesome
+                                            name="user-o"
+                                            color="#05375a"
                                             size={20}
                                         />
-                                    </Animatable.View>
-                                    : null}
-                            </View>
-                            {errors.description && touched.description ? (
-                                <Animatable.View animation="fadeInLeft" duration={500}>
-                                    <Text style={styles.errorMsg}>{errors.description}</Text>
-                                </Animatable.View>) : null
-                            }
-                        </View>
-                    )}
-                </Formik>
+                                        <TextInput
+                                            placeholder="Description"
+                                            style={styles.textInput}
+                                            autoCapitalize="none"
+                                            onChangeText={handleChange('description')}
+                                            onBlur={handleBlur('description')}
+                                            value={values.description}
+                                        />
+                                        {(values.description.trim().length >= 6 && !errors.description) ?
+                                            <Animatable.View
+                                                animation="bounceIn"
+                                            >
+                                                <Feather
+                                                    name="check-circle"
+                                                    color="green"
+                                                    size={20}
+                                                />
+                                            </Animatable.View>
+                                            : null}
+                                    </View>
+                                    {errors.description && touched.description ? (
+                                        <Animatable.View animation="fadeInLeft" duration={500}>
+                                            <Text style={styles.errorMsg}>{errors.description}</Text>
+                                        </Animatable.View>) : null
+                                    }
+                                </View>
+                            )}
+                        </Formik>
+                    </View>
+                </Animated.View>
+                </ScrollView>
             </View>
-        </View>
+
     )
 }
 

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 
 
 import {NavigationContainer} from '@react-navigation/native';
@@ -6,7 +6,7 @@ import {createDrawerNavigator} from 'react-navigation-drawer-no-warnings';
 import {createStackNavigator} from '@react-navigation/stack';
 
 
-import {View, ActivityIndicator} from "react-native";
+import {View, ActivityIndicator, Platform} from "react-native";
 
 import { enableScreens } from 'react-native-screens';
 
@@ -21,9 +21,22 @@ const Stack = createStackNavigator();
 
 import {useSelector} from "react-redux";
 import {SplashPage} from "./pages/Splash";
+import * as ImagePicker from "expo-image-picker";
 
 export const Main = () => {
     const {isAuthenticated, isAuthenticatedLoading} = useSelector(state => state.reAuth)
+
+    useEffect(() => {
+        (async () => {
+            if (Platform.OS !== 'web') {
+                const {status} = await ImagePicker.requestMediaLibraryPermissionsAsync();
+                if (status !== 'granted') {
+                    alert('Sorry, we need camera roll permissions to make this work!');
+                }
+            }
+        })();
+    }, []);
+
     if(isAuthenticatedLoading) {
         return(
             <View style={{flex:1,justifyContent:'center',alignItems:'center'}}>

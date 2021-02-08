@@ -1,10 +1,39 @@
 import React from 'react'
 import BottomSheet from "reanimated-bottom-sheet";
 import {StyleSheet, Text, TouchableOpacity, View} from "react-native";
+import * as ImagePicker from "expo-image-picker";
 
 
 export const BottomSheetAddImage = (props) => {
-    const {bs, fall, takePhotoFromCamera, choosePhotoFromLibrary} = props
+    const {bs, fall, handleChangeImage} = props
+
+
+    const takePhotoFromCamera = () => {
+        ImagePicker.launchCameraAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            aspect: [5, 5],
+            quality: 1,
+        }).then(img => {
+            console.log(img);
+            bs.current.snapTo(1);
+            (!img.cancelled) ? handleChangeImage(img.uri) : null
+        }).catch(e => console.log(e))
+        console.log("Camera")
+    }
+
+    const choosePhotoFromLibrary = () => {
+        ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            aspect: [5, 5],
+            quality: 1,
+        }).then(img => {
+            console.log(img);
+            bs.current.snapTo(1);
+            (!img.cancelled) ? handleChangeImage(img.uri) : null
+        }).catch(e => console.log(e))
+    }
 
     const renderInner = () => (
         <View style={styles.panel}>

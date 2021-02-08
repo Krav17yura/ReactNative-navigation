@@ -3,6 +3,8 @@ import {View, Text, StyleSheet, Button} from 'react-native'
 
 
 export const HomePage = ({navigation}) => {
+
+
     return (
         <View style={styles.container}>
             <Text>Home Screen</Text>

@@ -10,7 +10,6 @@ import {LinearGradient} from "expo-linear-gradient";
 
 
 import Animated from 'react-native-reanimated';
-import * as ImagePicker from 'expo-image-picker';
 import {BottomSheetAddImage} from "../../components/BottomSheetAddImage";
 
 const SettingSchema = Yup.object().shape({
@@ -31,53 +30,16 @@ export const SettingsPage = ({navigation}) => {
     const bs = React.createRef();
     const fall = new Animated.Value(1);
 
-    useEffect(() => {
-        (async () => {
-            if (Platform.OS !== 'web') {
-                const {status} = await ImagePicker.requestMediaLibraryPermissionsAsync();
-                if (status !== 'granted') {
-                    alert('Sorry, we need camera roll permissions to make this work!');
-                }
-            }
-        })();
-    }, []);
-
-
-    const takePhotoFromCamera = () => {
-        ImagePicker.launchCameraAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,
-            allowsEditing: true,
-            aspect: [5, 5],
-            quality: 1,
-        }).then(img => {
-            console.log(img);
-            bs.current.snapTo(1);
-            (!img.cancelled) ? setImage(img.uri) : null
-        }).catch(e => console.log(e))
-        console.log("Camera")
+    const handleChangeImage = (value) =>{
+        setImage(value)
     }
-
-    const choosePhotoFromLibrary = () => {
-        ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,
-            allowsEditing: true,
-            aspect: [5, 5],
-            quality: 1,
-        }).then(img => {
-            console.log(img);
-            bs.current.snapTo(1);
-            (!img.cancelled) ? setImage(img.uri) : null
-        }).catch(e => console.log(e))
-    }
-
 
     return (
         <View style={styles.container}>
            <BottomSheetAddImage
            bs={bs}
            fall={fall}
-           choosePhotoFromLibrary={choosePhotoFromLibrary}
-           takePhotoFromCamera={takePhotoFromCamera}
+           handleChangeImage={handleChangeImage}
            />
             <Animated.View style={{
                 margin: 20,
