@@ -32,16 +32,16 @@ export const SettingsPage = ({navigation}) => {
 
 
     const takePhotoFromCamera = () => {
-        // ImagePicker.openCamera({
-        //     compressImageMaxWidth: 300,
-        //     compressImageMaxHeight: 300,
-        //     cropping: true,
-        //     compressImageQuality: 0.7
-        // }).then(image => {
-        //     console.log(image);
-        //     setImage(image.path);
-        //     bs.current.snapTo(1);
-        // });
+        ImagePicker.launchCameraAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            aspect: [5, 5],
+            quality: 1,
+        }).then(img => {
+            console.log(img);
+            bs.current.snapTo(1);
+            (!img.cancelled) ? setImage(img.uri) : null
+        }).catch(e => console.log(e))
         console.log("Camera")
     }
 
@@ -58,7 +58,7 @@ export const SettingsPage = ({navigation}) => {
 
     const choosePhotoFromLibrary = () => {
         ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
             allowsEditing: true,
             aspect: [5, 5],
             quality: 1,
