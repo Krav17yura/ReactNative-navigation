@@ -44,6 +44,10 @@ export const Main = () => {
             </View>
         );
     }
+
+
+
+
     return (
         <NavigationContainer>
             {isAuthenticated ? <>

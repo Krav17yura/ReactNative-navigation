@@ -1,7 +1,7 @@
 import React from 'react'
-import {Text, View, StyleSheet, Button, ScrollView, Image} from "react-native";
+import { View, StyleSheet, ScrollView} from "react-native";
 import * as Animatable from "react-native-animatable";
-import {Avatar, Caption, Paragraph, Title, IconButton, Colors} from "react-native-paper";
+import {Avatar, Caption, Title, IconButton, } from "react-native-paper";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import {PostList} from "../../components/PostList";
 
@@ -14,7 +14,7 @@ export const ProfilePage = ({navigation}) => {
                     style={styles.footer}
                 >
                     <View style={styles.userInfoSection}>
-                        <View style={{flexDirection: 'row', marginTop: 15}}>
+                        <View style={{flexDirection: 'row', marginTop: 15, paddingLeft: 20, marginBottom: 15}}>
                             <Avatar.Image
                                 source={{
                                     uri: 'https://avatars.githubusercontent.com/u/36710059?s=460&u=2032a7eff0aabfcb796a018cf23c4b85a1131dd0&v=4'
@@ -39,7 +39,22 @@ export const ProfilePage = ({navigation}) => {
                             />
 
                         </View>
-                        <View style={styles.row}>
+                        <View style={styles.infoBoxWrapper}>
+                            <View style={[styles.infoBox, {
+                                borderRightColor: '#dddddd',
+                                borderRightWidth: 1
+                            }]}>
+                                <Title>80</Title>
+                                <Caption>Posts</Caption>
+                            </View>
+                            <View style={styles.infoBox}>
+                                <Title>100</Title>
+                                <Caption>Likes</Caption>
+                            </View>
+                        </View>
+                    </View>
+
+                      {/*  <View style={styles.row}>
                             <View style={styles.section}>
                                 <Paragraph style={[styles.paragraph, styles.caption]}>80</Paragraph>
                                 <Caption style={styles.caption}>Posts</Caption>
@@ -49,7 +64,7 @@ export const ProfilePage = ({navigation}) => {
                                 <Caption style={styles.caption}>Likes</Caption>
                             </View>
                         </View>
-                    </View>
+                    </View>*/}
 
                 </Animatable.View>
                 <Animatable.View
@@ -66,7 +81,7 @@ export const ProfilePage = ({navigation}) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#1d1d1d'
+        backgroundColor: '#1d1d1d',
     },
 
     postSection: {
@@ -74,9 +89,7 @@ const styles = StyleSheet.create({
         flex: 5,
     },
 
-    userInfoSection: {
-        paddingLeft: 20,
-    },
+
 
     title: {
         fontSize: 20,
@@ -101,6 +114,19 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         marginRight: 3,
     },
+    infoBoxWrapper: {
+    borderBottomColor: '#dddddd',
+    borderBottomWidth: 1,
+    borderTopColor: '#dddddd',
+    borderTopWidth: 1,
+    flexDirection: 'row',
+    height: 100,
+},
+    infoBox: {
+    width: '50%',
+    alignItems: 'center',
+    justifyContent: 'center',
+},
 })
 
 

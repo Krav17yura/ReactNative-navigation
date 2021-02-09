@@ -1,13 +1,13 @@
-import React, {useEffect, useState} from 'react'
-import {View, Text, StyleSheet, Image, Button, ScrollView, TextInput, Platform, TouchableOpacity} from 'react-native'
+import React, { useState} from 'react'
+import {View, Text, StyleSheet, Image, ScrollView, TextInput, Platform, TouchableOpacity} from 'react-native'
 import {Formik} from "formik";
 import * as Yup from "yup";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import * as Animatable from "react-native-animatable";
 import Feather from "react-native-vector-icons/Feather";
 import Animated from "react-native-reanimated";
-import * as ImagePicker from "expo-image-picker";
 import {BottomSheetAddImage} from "../../components/BottomSheetAddImage";
+import {LinearGradient} from "expo-linear-gradient";
 
 const SettingSchema = Yup.object().shape({
     description: Yup.string()
@@ -94,6 +94,35 @@ export const AddPostPage = ({navigation}) => {
                                             <Text style={styles.errorMsg}>{errors.description}</Text>
                                         </Animatable.View>) : null
                                     }
+
+                                    <View style={styles.button}>
+                                        <TouchableOpacity
+                                            style={styles.signIn}
+                                            onPress={() => console.log('submit')}
+                                        >
+                                            <LinearGradient
+                                                colors={['#08d4c4', '#01ab9d']}
+                                                style={styles.signIn}
+                                            >
+                                                <Text style={[styles.textSign, {
+                                                    color: '#fff'
+                                                }]}>Submit</Text>
+                                            </LinearGradient>
+                                        </TouchableOpacity>
+
+                                        <TouchableOpacity
+                                            onPress={() => navigation.goBack()}
+                                            style={[styles.signIn, {
+                                                borderColor: '#009387',
+                                                borderWidth: 1,
+                                                marginTop: 15
+                                            }]}
+                                        >
+                                            <Text style={[styles.textSign, {
+                                                color: '#009387'
+                                            }]}>Cancel</Text>
+                                        </TouchableOpacity>
+                                    </View>
                                 </View>
                             )}
                         </Formik>

@@ -1,18 +1,23 @@
 import React from 'react'
 import {View, Text, StyleSheet, Button} from 'react-native'
-
+import {PostList} from "../../components/PostList";
+import * as Animatable from "react-native-animatable";
+import {ScrollView} from "react-native";
 
 export const HomePage = ({navigation}) => {
 
 
     return (
+        <ScrollView>
         <View style={styles.container}>
-            <Text>Home Screen</Text>
-            <Button
-                title="Go to Profile"
-                onPress={() => navigation.navigate('Profile')}
-            />
+            <Animatable.View
+                animation="fadeInUpBig"
+                style={styles.postSection}
+            >
+                <PostList/>
+            </Animatable.View>
         </View>
+        </ScrollView>
     )
 }
 
@@ -20,8 +25,10 @@ export const HomePage = ({navigation}) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
-        alignItems: 'center',
-        justifyContent: 'center',
+        backgroundColor: '#000000',
+
+    },
+    postSection: {
+        marginTop: 20,
     },
 });
