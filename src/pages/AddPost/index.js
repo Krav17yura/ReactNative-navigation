@@ -1,5 +1,15 @@
-import React, { useState} from 'react'
-import {View, Text, StyleSheet, Image, ScrollView, TextInput, Platform, TouchableOpacity} from 'react-native'
+import React, {useEffect, useState} from 'react'
+import {
+    View,
+    Text,
+    StyleSheet,
+    Image,
+    ScrollView,
+    TextInput,
+    Platform,
+    TouchableOpacity,
+    Dimensions
+} from 'react-native'
 import {Formik} from "formik";
 import * as Yup from "yup";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
@@ -8,6 +18,9 @@ import Feather from "react-native-vector-icons/Feather";
 import Animated from "react-native-reanimated";
 import {BottomSheetAddImage} from "../../components/BottomSheetAddImage";
 import {LinearGradient} from "expo-linear-gradient";
+import MapView, {Callout, Marker} from "react-native-maps";
+import * as Location from "expo-location";
+import {CustomMap} from "../../components/CustomMap";
 
 const SettingSchema = Yup.object().shape({
     description: Yup.string()
@@ -21,18 +34,34 @@ export const AddPostPage = ({navigation}) => {
     const bs = React.createRef();
     const fall = new Animated.Value(1);
 
+    const [cord, setCord] = useState({
+        latitude: 50.450001,
+        longitude: 30.523333,
+        latitudeDelta: 0.0036,
+        longitudeDelta: 0.0121
+    })
+
+    const handleChangePointCoordinate = (value) => {
+        if (value.coords) {
+            setCord({...cord, latitude: value.coords.latitude, longitude: value.coords.longitude})
+        } else {
+            setCord(value)
+        }
+    }
+
     const handleChangeImage = (value) => {
         setImage(value)
     }
 
+
     return (
-            <View style={styles.container}>
-                <BottomSheetAddImage
-                    bs={bs}
-                    fall={fall}
-                    handleChangeImage={handleChangeImage}
-                />
-                <ScrollView>
+        <View style={styles.container}>
+            <BottomSheetAddImage
+                bs={bs}
+                fall={fall}
+                handleChangeImage={handleChangeImage}
+            />
+            <ScrollView>
                 <Animated.View style={{
                     opacity: Animated.add(0.1, Animated.multiply(fall, 1.0)),
                 }}>
@@ -61,6 +90,23 @@ export const AddPostPage = ({navigation}) => {
                                                style={{width: '100%', height: 400,}}
                                         /> : null}
 
+                                    <View style={styles.line}/>
+
+                                    <View style={styles.mapContainer}>
+                                        <Text style={styles.text_footer}>Select a place on the map </Text>
+                                        <CustomMap
+                                            cord={cord}
+                                            handleChangePointCoordinate={handleChangePointCoordinate}>
+
+                                            <Marker draggable
+                                                    coordinate={cord}
+                                                    onDragEnd={(e) => handleChangePointCoordinate(e.nativeEvent.coordinate)}
+                                            />
+
+                                        </CustomMap>
+                                    </View>
+
+                                    <View style={styles.line}/>
 
                                     <Text style={styles.text_footer}>Description</Text>
                                     <View style={styles.action}>
@@ -95,6 +141,8 @@ export const AddPostPage = ({navigation}) => {
                                         </Animatable.View>) : null
                                     }
 
+                                    <View style={styles.line}/>
+
                                     <View style={styles.button}>
                                         <TouchableOpacity
                                             style={styles.signIn}
@@ -123,13 +171,14 @@ export const AddPostPage = ({navigation}) => {
                                             }]}>Cancel</Text>
                                         </TouchableOpacity>
                                     </View>
+
                                 </View>
                             )}
                         </Formik>
                     </View>
                 </Animated.View>
-                </ScrollView>
-            </View>
+            </ScrollView>
+        </View>
 
     )
 }
@@ -189,4 +238,18 @@ const styles = StyleSheet.create({
     color_textPrivate: {
         color: 'grey'
     },
+    line: {
+        width: '100%',
+        marginTop: 10,
+        borderColor: '#646363',
+        borderWidth: 1,
+        borderRadius: 1
+    },
+    mapContainer: {
+        width: '100%',
+        height: 350,
+        marginBottom: 40
+    }
+
+
 });
