@@ -1,10 +1,11 @@
 import React, {useEffect, useState} from 'react'
 import * as Location from "expo-location";
 import MapView, {Callout, Marker, PROVIDER_GOOGLE} from "react-native-maps";
-import {Image, StyleSheet, Text, View} from "react-native";
+import {StyleSheet, Text, View} from "react-native";
 
 export const CustomMap = (props) => {
     const {cord, handleChangePointCoordinate} = props
+
 
     const [location, setLocation] = useState(null);
     const [errorMsg, setErrorMsg] = useState(null);

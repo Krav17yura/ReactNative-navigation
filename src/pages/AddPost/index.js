@@ -17,38 +17,46 @@ import Feather from "react-native-vector-icons/Feather";
 import Animated from "react-native-reanimated";
 import {BottomSheetAddImage} from "../../components/BottomSheetAddImage";
 import {LinearGradient} from "expo-linear-gradient";
-import  { Marker} from "react-native-maps";
+import {Marker} from "react-native-maps";
 import {CustomMap} from "../../components/CustomMap";
+import {useDispatch} from "react-redux";
+import {addPost} from "../../redux/ducks/posts/actionCreators";
 
 const SettingSchema = Yup.object().shape({
     description: Yup.string()
         .min(4, 'Description must be 4 characters long.')
-        .max(30, 'Too Long!'),
+        .max(30, 'Too Long!')
+        .required('Required'),
 });
 
 export const AddPostPage = ({navigation}) => {
+    const dispatch = useDispatch();
     const [image, setImage] = useState('');
 
     const bs = React.createRef();
     const fall = new Animated.Value(1);
 
-    const [cord, setCord] = useState({
+    const [markerCord, setMarkerCord] = useState({
         latitude: 50.450001,
         longitude: 30.523333,
-        latitudeDelta: 0.0036,
-        longitudeDelta: 0.0121
     })
 
     const handleChangePointCoordinate = (value) => {
+        console.log(value)
         if (value.coords) {
-            setCord({...cord, latitude: value.coords.latitude, longitude: value.coords.longitude})
+            console.log("hello")
+            setMarkerCord(value.coords)
         } else {
-            setCord(value)
+            setMarkerCord(value)
         }
     }
 
     const handleChangeImage = (value) => {
         setImage(value)
+    }
+
+    const handleSubmitAddPostForm = (value) => {
+        dispatch(addPost({image, markerCord, value}))
     }
 
 
@@ -66,7 +74,7 @@ export const AddPostPage = ({navigation}) => {
                     <View style={styles.addPostForm}>
                         <Formik
                             initialValues={{description: ''}}
-                            onSubmit={() => console.log('submit')}
+                            onSubmit={values => handleSubmitAddPostForm(values)}
                             validationSchema={SettingSchema}
                         >
                             {({handleChange, handleBlur, handleSubmit, values, errors, touched}) => (
@@ -93,11 +101,12 @@ export const AddPostPage = ({navigation}) => {
                                     <View style={styles.mapContainer}>
                                         <Text style={styles.text_footer}>Select a place on the map </Text>
                                         <CustomMap
-                                            cord={cord}
+                                            cord={markerCord}
                                             handleChangePointCoordinate={handleChangePointCoordinate}>
 
                                             <Marker draggable
-                                                    coordinate={cord}
+                                                    pinColor={'green'}
+                                                    coordinate={markerCord}
                                                     onDragEnd={(e) => handleChangePointCoordinate(e.nativeEvent.coordinate)}
                                             />
 
@@ -144,7 +153,7 @@ export const AddPostPage = ({navigation}) => {
                                     <View style={styles.button}>
                                         <TouchableOpacity
                                             style={styles.signIn}
-                                            onPress={() => console.log('submit')}
+                                            onPress={handleSubmit}
                                         >
                                             <LinearGradient
                                                 colors={['#08d4c4', '#01ab9d']}
@@ -169,7 +178,6 @@ export const AddPostPage = ({navigation}) => {
                                             }]}>Cancel</Text>
                                         </TouchableOpacity>
                                     </View>
-
                                 </View>
                             )}
                         </Formik>

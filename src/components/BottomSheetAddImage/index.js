@@ -15,11 +15,9 @@ export const BottomSheetAddImage = (props) => {
             aspect: [5, 5],
             quality: 1,
         }).then(img => {
-            console.log(img);
             bs.current.snapTo(1);
             (!img.cancelled) ? handleChangeImage(img.uri) : null
         }).catch(e => console.log(e))
-        console.log("Camera")
     }
 
     const choosePhotoFromLibrary = () => {
@@ -29,9 +27,9 @@ export const BottomSheetAddImage = (props) => {
             aspect: [5, 5],
             quality: 1,
         }).then(img => {
-            console.log(img);
             bs.current.snapTo(1);
             (!img.cancelled) ? handleChangeImage(img.uri) : null
+            console.log(img)
         }).catch(e => console.log(e))
     }
 
