@@ -8,7 +8,6 @@ import {
     TextInput,
     Platform,
     TouchableOpacity,
-    Dimensions
 } from 'react-native'
 import {Formik} from "formik";
 import * as Yup from "yup";
@@ -18,8 +17,7 @@ import Feather from "react-native-vector-icons/Feather";
 import Animated from "react-native-reanimated";
 import {BottomSheetAddImage} from "../../components/BottomSheetAddImage";
 import {LinearGradient} from "expo-linear-gradient";
-import MapView, {Callout, Marker} from "react-native-maps";
-import * as Location from "expo-location";
+import  { Marker} from "react-native-maps";
 import {CustomMap} from "../../components/CustomMap";
 
 const SettingSchema = Yup.object().shape({

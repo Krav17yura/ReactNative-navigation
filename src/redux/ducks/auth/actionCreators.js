@@ -8,7 +8,7 @@ import {
 } from "./actionTypes";
 
 import {showCurrentUserSuccess} from "../currentUser/actionCreator";
-import {projectAuth} from "../../../firebase-config";
+import {projectAuth, projectFirestore, timestamp} from "../../../firebase-config";
 
 
 export const authInfoSuccess = user => {
@@ -78,17 +78,24 @@ export const login = (params) => (dispatch) => {
 
 };
 
-export const signup = params => (dispatch) => {
+export const signup = params => async (dispatch) => {
     const {email, password, nickName} = params;
     dispatch(signupRequest());
 
     try {
-        projectAuth.createUserWithEmailAndPassword(email, password)
-            .then(res => res.user.updateProfile({displayName: nickName}))
-            .then(() => dispatch(signupSuccess()))
-            .catch(e => {
-                dispatch(signupError(e));
-            });
+        let createdUser = await projectAuth.createUserWithEmailAndPassword(email, password)
+        await createdUser.user.updateProfile({displayName: nickName})
+        let newUser={
+            displayName: nickName,
+            fullName: null,
+            email,
+            photo: null,
+            userId: createdUser.user.uid,
+            createdAt: timestamp
+        }
+        await projectFirestore.collection('users').doc(createdUser.user.uid).set({...newUser});
+
+        dispatch(signupSuccess())
     } catch (e) {
         dispatch(signupError(e));
     }
@@ -97,7 +104,6 @@ export const signup = params => (dispatch) => {
 
 export const logout = () => (dispatch) => {
     dispatch(logoutRequest());
-
     try {
         projectAuth.signOut()
             .then(() => dispatch(logoutSuccess()))
