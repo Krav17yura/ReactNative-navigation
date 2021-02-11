@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "native-navigation",
-    "slug": "native-navigation",
+    "name": "native-navigat",
+    "slug": "native-navigat",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -24,7 +24,12 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "package": "fishing.test"
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyAz8uVfj1E87C5fmnyEegHFxHfrWPdmsFM"
+        }
+      },
+      "package": "com.krav_yura.home"
     },
     "web": {
       "favicon": "./assets/favicon.png"

@@ -1,15 +1,13 @@
 import React, {useEffect, useState} from 'react'
 import * as Location from "expo-location";
-import MapView, {Callout, Marker} from "react-native-maps";
+import MapView, {Callout, Marker, PROVIDER_GOOGLE} from "react-native-maps";
 import {Image, StyleSheet, Text, View} from "react-native";
 
 export const CustomMap = (props) => {
     const {cord, handleChangePointCoordinate} = props
 
-
     const [location, setLocation] = useState(null);
     const [errorMsg, setErrorMsg] = useState(null);
-
 
     useEffect(() => {
         (async () => {
@@ -24,19 +22,19 @@ export const CustomMap = (props) => {
                     {
                         cord ? handleChangePointCoordinate(location) : null
                     }
-                }).catch(e => console.log(e));
-
-
+                }).catch(e => setErrorMsg(e));
         })();
     }, []);
 
 
     if (!location) {
-        return <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}><Text>Loading</Text></View>
+        return <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}><Text>Loading</Text>
+            <Text>{errorMsg}</Text></View>
     }
 
     return (
         <MapView style={styles.map}
+                 provider={PROVIDER_GOOGLE}
                  initialRegion={{
                      latitude: location.coords.latitude,
                      longitude: location.coords.longitude,
@@ -44,7 +42,7 @@ export const CustomMap = (props) => {
                      longitudeDelta: 0.0121
                  }}
         >
-            {/*    {location ?
+          {/*  {location ?
                 <Marker
                     coordinate={{
                         latitude: location.coords.latitude,
@@ -74,7 +72,6 @@ export const CustomMap = (props) => {
                     latitude: 50.426455966277494,
                     longitude: 30.57975769042969,
                 }}
-                image={require('../../../assets/map_marker.png')}
                 title="Test Title"
                 description="This is the test description"
             >
@@ -83,9 +80,9 @@ export const CustomMap = (props) => {
                         <View style={styles.bubble}>
                             <Text style={styles.name}>Fishing point 1</Text>
                             <Text>A short description</Text>
-                            <Image
+                           {/* <Image
                                 style={styles.image}
-                                source={{uri: 'https://avatars.githubusercontent.com/u/36710059?s=460&u=2032a7eff0aabfcb796a018cf23c4b85a1131dd0&v=4'}}/>
+                                source={{uri: 'https://avatars.githubusercontent.com/u/36710059?s=460&u=2032a7eff0aabfcb796a018cf23c4b85a1131dd0&v=4'}}/>*/}
                         </View>
 
                         <View style={styles.arrowBorder}/>
@@ -117,7 +114,6 @@ export const CustomMap = (props) => {
                 strokeColor="rgba(0,0,0,0.5)"
                 strokeWidth={2}
             />
-
             {props.children}
         </MapView>
     )
