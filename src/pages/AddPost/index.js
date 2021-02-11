@@ -19,8 +19,9 @@ import {BottomSheetAddImage} from "../../components/BottomSheetAddImage";
 import {LinearGradient} from "expo-linear-gradient";
 import {Marker} from "react-native-maps";
 import {CustomMap} from "../../components/CustomMap";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {addPost} from "../../redux/ducks/posts/actionCreators";
+
 
 const SettingSchema = Yup.object().shape({
     description: Yup.string()
@@ -29,9 +30,14 @@ const SettingSchema = Yup.object().shape({
         .required('Required'),
 });
 
+import {showMessage, hideMessage} from "react-native-flash-message";
+
 export const AddPostPage = ({navigation}) => {
     const dispatch = useDispatch();
+    const {addPostInProgress, addPostError} = useSelector(state => state.rePosts)
+
     const [image, setImage] = useState('');
+    const [imageError, setImageError] = useState('')
 
     const bs = React.createRef();
     const fall = new Animated.Value(1);
@@ -42,9 +48,8 @@ export const AddPostPage = ({navigation}) => {
     })
 
     const handleChangePointCoordinate = (value) => {
-        console.log(value)
+
         if (value.coords) {
-            console.log("hello")
             setMarkerCord(value.coords)
         } else {
             setMarkerCord(value)
@@ -53,10 +58,16 @@ export const AddPostPage = ({navigation}) => {
 
     const handleChangeImage = (value) => {
         setImage(value)
+        setImageError('')
     }
 
     const handleSubmitAddPostForm = (value) => {
-        dispatch(addPost({image, markerCord, value}))
+        if (image) {
+            dispatch(addPost({image, markerCord, value}))
+        } else {
+           setImageError('Error is Required')
+        }
+
     }
 
 
@@ -72,6 +83,7 @@ export const AddPostPage = ({navigation}) => {
                     opacity: Animated.add(0.1, Animated.multiply(fall, 1.0)),
                 }}>
                     <View style={styles.addPostForm}>
+
                         <Formik
                             initialValues={{description: ''}}
                             onSubmit={values => handleSubmitAddPostForm(values)}
@@ -88,6 +100,7 @@ export const AddPostPage = ({navigation}) => {
                                         }}>{image ? 'Replace photo' : 'Upload photo'}</Text>
                                     </TouchableOpacity>
 
+
                                     {image ?
                                         <Image source={{
                                             uri: image
@@ -95,6 +108,12 @@ export const AddPostPage = ({navigation}) => {
                                                resizeMode="cover"
                                                style={{width: '100%', height: 400,}}
                                         /> : null}
+
+                                    {imageError? (
+                                        <Animatable.View animation="fadeInLeft" duration={500}>
+                                            <Text style={styles.errorMsg}>{imageError}</Text>
+                                        </Animatable.View>) : null
+                                    }
 
                                     <View style={styles.line}/>
 
@@ -154,6 +173,7 @@ export const AddPostPage = ({navigation}) => {
                                         <TouchableOpacity
                                             style={styles.signIn}
                                             onPress={handleSubmit}
+                                            disabled={addPostInProgress}
                                         >
                                             <LinearGradient
                                                 colors={['#08d4c4', '#01ab9d']}
@@ -161,7 +181,7 @@ export const AddPostPage = ({navigation}) => {
                                             >
                                                 <Text style={[styles.textSign, {
                                                     color: '#fff'
-                                                }]}>Submit</Text>
+                                                }]}>{addPostInProgress ? "Loading..." : 'Submit'}</Text>
                                             </LinearGradient>
                                         </TouchableOpacity>
 
@@ -177,6 +197,7 @@ export const AddPostPage = ({navigation}) => {
                                                 color: '#009387'
                                             }]}>Cancel</Text>
                                         </TouchableOpacity>
+
                                     </View>
                                 </View>
                             )}
@@ -184,6 +205,7 @@ export const AddPostPage = ({navigation}) => {
                     </View>
                 </Animated.View>
             </ScrollView>
+
         </View>
 
     )

@@ -1,5 +1,6 @@
 import {ADD_POST_ERROR, ADD_POST_REQUEST, ADD_POST_SUCCESS} from "./actionTypes";
 import {projectFirestore, projectStorage, timestamp} from "../../../firebase-config";
+import {showMessage} from "react-native-flash-message";
 
 export const addPostRequest = () => {
     return {
@@ -33,6 +34,7 @@ export const addPost = (params) => async (dispatch, getState) => {
 
 
     try {
+
         const response = await fetch(image)
         const blob = await response.blob();
         await ref.put(blob)
@@ -47,6 +49,9 @@ export const addPost = (params) => async (dispatch, getState) => {
         dispatch(addPostSuccess())
     } catch (e) {
         dispatch(addPostError(e))
+        showMessage({
+            message: "Something going wrong! Try again",
+            type: "danger",
+        });
     }
-
 }
