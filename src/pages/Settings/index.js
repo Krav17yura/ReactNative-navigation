@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, StyleSheet, TouchableOpacity, TextInput, Platform} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity, TextInput, Platform, ActivityIndicator} from 'react-native';
 import {Avatar} from "react-native-paper";
 import * as Animatable from "react-native-animatable";
 import {Formik} from "formik";
@@ -11,6 +11,8 @@ import {LinearGradient} from "expo-linear-gradient";
 
 import Animated from 'react-native-reanimated';
 import {BottomSheetAddImage} from "../../components/BottomSheetAddImage";
+import {useDispatch, useSelector} from "react-redux";
+import {changeUserImage, changeUserInformation} from "../../redux/ducks/users/actionCreator";
 
 const SettingSchema = Yup.object().shape({
     nickName: Yup.string()
@@ -26,41 +28,72 @@ const SettingSchema = Yup.object().shape({
 });
 
 export const SettingsPage = ({navigation}) => {
-    const [image, setImage] = useState('https://avatars.githubusercontent.com/u/36710059?s=460&u=2032a7eff0aabfcb796a018cf23c4b85a1131dd0&v=4');
+    const dispatch = useDispatch();
+    const [image, setImage] = useState();
     const bs = React.createRef();
     const fall = new Animated.Value(1);
+    const {currentUser, changeUserInformationInProgress, changeUserImageInProgress} = useSelector((state) => state.reUsers)
 
-    const handleChangeImage = (value) =>{
+
+    const handleChangeImage = (value) => {
         setImage(value)
+    }
+
+    const handleSubmitChangeImage = () => {
+        dispatch(changeUserImage(image))
+        setImage('')
+    }
+
+    const handleSubmitUserInformationForm = (value) => {
+        dispatch(changeUserInformation(value))
     }
 
     return (
         <View style={styles.container}>
-           <BottomSheetAddImage
-           bs={bs}
-           fall={fall}
-           handleChangeImage={handleChangeImage}
-           />
+            <BottomSheetAddImage
+                bs={bs}
+                fall={fall}
+                handleChangeImage={handleChangeImage}
+            />
             <Animated.View style={{
                 margin: 20,
                 opacity: Animated.add(0.1, Animated.multiply(fall, 1.0)),
             }}>
                 <View style={styles.settingsHeader}>
-                    <Avatar.Image
-                        source={{
-                            uri: image
-                        }}
-                        size={70}
-                    />
+
+                    {changeUserImageInProgress ?
+                        <ActivityIndicator size="large" color="#00ff00"/> :
+                        <Avatar.Image source={{uri: image ? image : currentUser.photo}} size={70}/>
+                    }
+
                     <TouchableOpacity onPress={() => bs.current.snapTo(0)}>
                         <Text style={{color: '#009387', marginTop: 10, fontSize: 18}}>Change profile img</Text>
                     </TouchableOpacity>
+                    {image ?
+                        <View style={styles.changePhotoSubmitButton}>
+                            <TouchableOpacity onPress={handleSubmitChangeImage}>
+                                <Text style={{
+                                    color: '#229cbf',
+                                    marginTop: 10,
+                                    fontSize: 18,
+                                    marginRight: 10
+                                }}>Submit</Text>
+                            </TouchableOpacity>
+
+                            <TouchableOpacity onPress={() => handleChangeImage('')}>
+                                <Text style={{color: '#9d1313', marginTop: 10, fontSize: 18}}>Cancel</Text>
+                            </TouchableOpacity>
+                        </View> : null}
                 </View>
                 <View style={styles.settingMainContainer}>
                     <Formik
-                        initialValues={{nickName: '', userName: '', description: ''}}
+                        initialValues={{
+                            nickName: currentUser.displayName,
+                            userName: currentUser.fullName,
+                            description: currentUser.description
+                        }}
                         validationSchema={SettingSchema}
-                        onSubmit={values => console.log(values)}>
+                        onSubmit={values => handleSubmitUserInformationForm(values)}>
                         {({handleChange, handleBlur, handleSubmit, values, errors, touched}) => (
                             <View>
                                 <Text style={styles.text_footer}>Nick Name</Text>
@@ -166,15 +199,18 @@ export const SettingsPage = ({navigation}) => {
                                 <View style={styles.button}>
                                     <TouchableOpacity
                                         style={styles.signIn}
-                                        onPress={() => console.log('submit')}
+                                        onPress={handleSubmit}
                                     >
                                         <LinearGradient
                                             colors={['#08d4c4', '#01ab9d']}
                                             style={styles.signIn}
                                         >
-                                            <Text style={[styles.textSign, {
-                                                color: '#fff'
-                                            }]}>Submit</Text>
+                                            {changeUserInformationInProgress ?
+                                                <ActivityIndicator size="large" color="#00ff00"/> :
+                                                <Text style={[styles.textSign, {
+                                                    color: '#fff'
+                                                }]}>Submit</Text>
+                                            }
                                         </LinearGradient>
                                     </TouchableOpacity>
 
@@ -226,6 +262,10 @@ const styles = StyleSheet.create({
         borderBottomColor: '#f2f2f2',
         paddingBottom: 5,
         paddingRight: 8
+    },
+    changePhotoSubmitButton: {
+        flexDirection: 'row',
+        marginBottom: 10,
     },
     textInput: {
         flex: 1,

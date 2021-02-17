@@ -5,6 +5,7 @@ import {createStackNavigator} from "@react-navigation/stack";
 import {SupportPage} from "../Support";
 import {SettingsPage} from "../Settings";
 import {HomePage} from "./index";
+import {FullPostPage} from "../FullPost";
 
 const HomeStack = createStackNavigator();
 
@@ -45,8 +46,8 @@ export const HomeStackScreen = ({navigation}) => (
             }}
         />
         <HomeStack.Screen
-            name="Settings"
-            component={SettingsPage}
+            name="FullPost"
+            component={FullPostPage}
             options={{
                 headerRight: () => (
                     <Icon.Button
@@ -58,6 +59,9 @@ export const HomeStackScreen = ({navigation}) => (
                 )
             }}
         />
+
+
+
 
     </HomeStack.Navigator>
 )

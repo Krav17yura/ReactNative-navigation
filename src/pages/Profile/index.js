@@ -4,8 +4,11 @@ import * as Animatable from "react-native-animatable";
 import {Avatar, Caption, Title, IconButton, } from "react-native-paper";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import {PostList} from "../../components/PostList";
+import {useSelector} from "react-redux";
 
 export const ProfilePage = ({navigation}) => {
+    const {currentUser} = useSelector((state) => state.reUsers)
+    const {postList} = useSelector((state) => state.rePosts)
     return (
         <ScrollView>
             <View style={styles.container}>
@@ -17,13 +20,13 @@ export const ProfilePage = ({navigation}) => {
                         <View style={{flexDirection: 'row', marginTop: 15, paddingLeft: 20, marginBottom: 15}}>
                             <Avatar.Image
                                 source={{
-                                    uri: 'https://avatars.githubusercontent.com/u/36710059?s=460&u=2032a7eff0aabfcb796a018cf23c4b85a1131dd0&v=4'
+                                    uri: currentUser.photo
                                 }}
                                 size={80}
                             />
                             <View style={{marginLeft: 15, flexDirection: 'column'}}>
                                 <Title style={styles.title}>Krav Yura</Title>
-                                <Caption style={styles.caption}>@krav</Caption>
+                                <Caption style={styles.caption}>@{currentUser.displayName}</Caption>
 
                             </View>
 
@@ -71,7 +74,7 @@ export const ProfilePage = ({navigation}) => {
                     animation="fadeInUpBig"
                     style={styles.postSection}
                 >
-                    <PostList/>
+                    <PostList posts={postList}/>
                 </Animatable.View>
             </View>
         </ScrollView>

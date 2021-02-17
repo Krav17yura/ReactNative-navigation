@@ -22,6 +22,7 @@ const Stack = createStackNavigator();
 import {useSelector} from "react-redux";
 import {SplashPage} from "./pages/Splash";
 import * as ImagePicker from "expo-image-picker";
+import {SettingsPage} from "./pages/Settings";
 
 export const Main = () => {
     const {isAuthenticated, isAuthenticatedLoading} = useSelector(state => state.reAuth)
@@ -54,6 +55,8 @@ export const Main = () => {
                 <Drawer.Navigator drawerContent={props => <DrawerContent {...props}/>}>
                     <Drawer.Screen name="HomeDrawer" component={MainTabScreen}/>
                 </Drawer.Navigator>
+
+
             </> : <>
                 <Stack.Navigator headerMode='none'>
                     <Stack.Screen name="Splash" component={SplashPage}/>

@@ -4,7 +4,7 @@ import MapView, {Callout, Marker, PROVIDER_GOOGLE} from "react-native-maps";
 import {StyleSheet, Text, View} from "react-native";
 
 export const CustomMap = (props) => {
-    const {cord, handleChangePointCoordinate} = props
+    const {cord, handleChangePointCoordinate, postList} = props
 
 
     const [location, setLocation] = useState(null);
@@ -43,7 +43,7 @@ export const CustomMap = (props) => {
                      longitudeDelta: 0.0121
                  }}
         >
-          {/*  {location ?
+            {/*  {location ?
                 <Marker
                     coordinate={{
                         latitude: location.coords.latitude,
@@ -68,29 +68,32 @@ export const CustomMap = (props) => {
                         </View>
                     </Callout>
                 </Marker> : null}*/}
-            <Marker
-                coordinate={{
-                    latitude: 50.426455966277494,
-                    longitude: 30.57975769042969,
-                }}
-                title="Test Title"
-                description="This is the test description"
-            >
-                <Callout>
-                    <View>
-                        <View style={styles.bubble}>
-                            <Text style={styles.name}>Fishing point 1</Text>
-                            <Text>A short description</Text>
-                           {/* <Image
+            {postList && postList.map((item) => (
+                <Marker
+                    key={item.docId}
+                    coordinate={{
+                        latitude: item.markerCord.latitude,
+                        longitude: item.markerCord.longitude,
+                    }}
+                    title="Test Title"
+                    description={item.description}
+                >
+                    <Callout>
+                        <View>
+                            <View style={styles.bubble}>
+                                <Text style={styles.name}>Fishing point 1</Text>
+                                <Text>{item.description}</Text>
+                                {/* <Image
                                 style={styles.image}
                                 source={{uri: 'https://avatars.githubusercontent.com/u/36710059?s=460&u=2032a7eff0aabfcb796a018cf23c4b85a1131dd0&v=4'}}/>*/}
-                        </View>
+                            </View>
 
-                        <View style={styles.arrowBorder}/>
-                        <View style={styles.arrow}/>
-                    </View>
-                </Callout>
-            </Marker>
+                            <View style={styles.arrowBorder}/>
+                            <View style={styles.arrow}/>
+                        </View>
+                    </Callout>
+                </Marker>
+            ))}
 
             <MapView.Polygon
                 coordinates={[

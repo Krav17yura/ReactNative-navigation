@@ -1,13 +1,15 @@
 import React from 'react'
 import { StyleSheet,  View} from 'react-native';
 import {CustomMap} from "../../components/CustomMap";
+import {useSelector} from "react-redux";
 
 
 
 export const MapPage = ({navigation}) => {
+    const {postList} = useSelector((state) => state.rePosts)
     return (
         <View style={styles.container}>
-            <CustomMap/>
+            <CustomMap postList={postList}/>
         </View>
     )
 }

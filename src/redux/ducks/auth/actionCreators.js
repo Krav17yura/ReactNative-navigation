@@ -7,7 +7,7 @@ import {
     SIGNUP_SUCCESS
 } from "./actionTypes";
 
-import {showCurrentUserSuccess} from "../currentUser/actionCreator";
+import {showCurrentUserSuccess} from "../users/actionCreator";
 import {projectAuth, projectFirestore, timestamp} from "../../../firebase-config";
 
 
@@ -87,11 +87,12 @@ export const signup = params => async (dispatch) => {
         await createdUser.user.updateProfile({displayName: nickName})
         let newUser={
             displayName: nickName,
-            fullName: null,
+            fullName: '',
             email,
-            photo: null,
+            photo: '',
             userId: createdUser.user.uid,
-            createdAt: timestamp
+            createdAt: timestamp,
+            description: ''
         }
         await projectFirestore.collection('users').doc(createdUser.user.uid).set({...newUser});
 

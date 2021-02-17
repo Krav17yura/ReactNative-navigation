@@ -15,6 +15,9 @@ export default  function App() {
             <FlashMessage position="top" animated={true} duration={500} />
         </Provider>
     );
+
 }
+
+
 
 

@@ -6,12 +6,18 @@ import * as Animatable from "react-native-animatable";
 import {PostListItem} from "./PostListItem";
 
 
-export const PostList = () => {
-    return(
+export const PostList = (props) => {
+    const {posts, navigation} = props
+
+    return (
         <View style={styles.postList}>
-            <PostListItem/>
-            <PostListItem/>
-            <PostListItem/>
+            {posts && posts.map(el => (
+                <PostListItem
+                    key={el.docId}
+                    {...el}
+                    navigation={navigation}
+                />
+            ))}
         </View>
     )
 }

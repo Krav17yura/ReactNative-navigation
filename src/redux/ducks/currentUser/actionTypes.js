@@ -1,5 +1,0 @@
-export const SHOW_CURRENT_USER_REQUEST = 'app/currentUser/SHOW_CURRENT_USER_REQUEST';
-export const SHOW_CURRENT_USER_SUCCESS = 'app/currentUser/SHOW_CURRENT_USER_SUCCESS';
-
-
-

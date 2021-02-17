@@ -7,7 +7,7 @@ import {
     ScrollView,
     TextInput,
     Platform,
-    TouchableOpacity,
+    TouchableOpacity, ActivityIndicator,
 } from 'react-native'
 import {Formik} from "formik";
 import * as Yup from "yup";
@@ -33,6 +33,7 @@ const SettingSchema = Yup.object().shape({
 import {showMessage, hideMessage} from "react-native-flash-message";
 
 export const AddPostPage = ({navigation}) => {
+    const {postList} = useSelector((state) => state.rePosts)
     const dispatch = useDispatch();
     const {addPostInProgress, addPostError} = useSelector(state => state.rePosts)
 
@@ -48,7 +49,6 @@ export const AddPostPage = ({navigation}) => {
     })
 
     const handleChangePointCoordinate = (value) => {
-
         if (value.coords) {
             setMarkerCord(value.coords)
         } else {
@@ -65,7 +65,7 @@ export const AddPostPage = ({navigation}) => {
         if (image) {
             dispatch(addPost({image, markerCord, value}))
         } else {
-           setImageError('Error is Required')
+            setImageError('Error is Required')
         }
 
     }
@@ -109,7 +109,7 @@ export const AddPostPage = ({navigation}) => {
                                                style={{width: '100%', height: 400,}}
                                         /> : null}
 
-                                    {imageError? (
+                                    {imageError ? (
                                         <Animatable.View animation="fadeInLeft" duration={500}>
                                             <Text style={styles.errorMsg}>{imageError}</Text>
                                         </Animatable.View>) : null
@@ -121,6 +121,7 @@ export const AddPostPage = ({navigation}) => {
                                         <Text style={styles.text_footer}>Select a place on the map </Text>
                                         <CustomMap
                                             cord={markerCord}
+                                            postList={postList}
                                             handleChangePointCoordinate={handleChangePointCoordinate}>
 
                                             <Marker draggable
@@ -179,9 +180,12 @@ export const AddPostPage = ({navigation}) => {
                                                 colors={['#08d4c4', '#01ab9d']}
                                                 style={styles.signIn}
                                             >
-                                                <Text style={[styles.textSign, {
-                                                    color: '#fff'
-                                                }]}>{addPostInProgress ? "Loading..." : 'Submit'}</Text>
+                                                {addPostInProgress ?
+                                                    <ActivityIndicator size="large" color="#00ff00"/> :
+                                                    <Text style={[styles.textSign, {
+                                                        color: '#fff'
+                                                    }]}>Submit</Text>
+                                                }
                                             </LinearGradient>
                                         </TouchableOpacity>
 
